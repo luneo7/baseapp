@@ -1,0 +1,333 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Solr Search</title>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="webjars/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link href="css/sb-admin.css" type="text/css" rel="stylesheet" />
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="webjars/html5shiv/3.7.3/html5shiv.js"></script>
+    <script src="webjars/respond/1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+<div id="wrapper">
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand">APP</a>
+        </div>
+        <!-- Top Menu Items -->
+        <ul class="nav navbar-right top-nav">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> Luke Skywalker <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav side-nav">
+                <li>
+                    <a href="files"><i class="fa fa-fw fa-file"></i> File Repository</a>
+                </li>
+
+                <li class="active">
+                    <a href="solrsearch"><i class="fa fa-fw fa-search"></i> Solr Search</a>
+                </li>
+
+                <!--
+                <li>
+                    <a href="javascript:;" data-toggle="collapse" data-target="#demo" class="accordion-toggle collapsed"><i class="fa fa-fw fa-arrows-v"></i> Dropdown</a>
+                    <ul id="demo" class="collapse">
+                        <li>
+                            <a href="#">Dropdown Item</a>
+                        </li>
+                        <li>
+                            <a href="#">Dropdown Item</a>
+                        </li>
+                    </ul>
+                </li>
+                -->
+
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
+
+    <div id="page-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                        Solr Search
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li>
+                            <i class="fa fa-dashboard"></i>  <a>Home</a>
+                        </li>
+                        <li class="active">
+                            <i class="fa fa-edit"></i> Solr Search
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <!-- /.row -->
+
+
+            <div class="row">
+                <ul class="nav nav-tabs tabs-solr" role="tablist">
+                    <li role="presentation" class="active"><a href="#highlight" aria-controls="highlight" role="tab" data-toggle="tab">Highlight Query</a></li>
+                    <li role="presentation"><a href="#simple" aria-controls="simple" role="tab" data-toggle="tab">Simple Query</a></li>
+
+                </ul>
+
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="highlight">
+                        <div class="col-lg-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Query</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-inline">
+                                        <div class="form-group">
+                                            <label for="search_query_highlight">Search query</label>
+                                            <input type="text" class="form-control" id="search_query_highlight" value="*:*" />
+                                        </div>
+                                        <button type="button" class="btn btn-primary" id="execute_query_highlight">Execute Query</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Highlight Query Result</h3>
+                                </div>
+                                <div class="panel-body" id="query_result_highlight">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="simple">
+                        <div class="col-lg-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Query</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-inline">
+                                        <div class="form-group">
+                                            <label for="search_query">Search query</label>
+                                            <input type="text" class="form-control" id="search_query" value="*:*" />
+                                        </div>
+                                        <button type="button" class="btn btn-primary" id="execute_query">Execute Query</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Query Result</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="well">
+                                        <pre id="query_result">
+
+                                        </pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+
+    </div>
+    <!-- /#page-wrapper -->
+
+</div>
+
+<script src="webjars/jquery/3.1.1-1/jquery.min.js" type="application/javascript"></script>
+<script src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js" type="application/javascript"></script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    $(document).ready(function () {
+
+        $("#query_result_highlight").delegate(".download-file", "click", function(e) {
+            e.preventDefault();
+
+            var button = $(this);
+            var key = button.attr("data-key");
+
+            var obj = { key: key };
+            var url = '/downloadfilebykey?' + $.param(obj);
+
+            window.open(url);
+        });
+
+        $("#query_result_highlight").delegate(".download-file-gurl", "click", function(e) {
+            e.preventDefault();
+
+            var button = $(this);
+            var key = button.attr("data-key");
+
+            $.ajax({
+                type: "POST",
+                url: "/generatedownloadurlbykey",
+                data: {key: key},
+                success:function (data) {
+                    window.open(data);
+                }
+            });
+
+        });
+
+        $('#execute_query').on("click",function(e) {
+            e.preventDefault();
+
+            var query = $("#search_query").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/api/solrquery",
+                data: {query: query},
+                success: function (data) {
+                    var queryResult = $("#query_result");
+                    queryResult.html(JSON.stringify(data, undefined, 2));
+                }
+            });
+
+        });
+
+        $('#execute_query_highlight').on("click",function(e) {
+            e.preventDefault();
+
+            var query = $("#search_query_highlight").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/api/solrqueryhighlight",
+                data: {query: query},
+                success: function (result) {
+                    var queryResult = $("#query_result_highlight");
+                    var i;
+                    //queryResult.html(JSON.stringify(data, undefined, 2));
+                    queryResult.html("");
+
+                    for (i = 0; i < result.data.length; i++) {
+                        var $newDiv = $("<div />").addClass("well");
+
+                        var formElement = $("<div />").addClass("form-horizontal");
+
+                        var idElement = $("<div />").addClass("form-group").html(
+                            "<label class='col-sm-2 control-label'>ID</label>" +
+                            "<div class='col-sm-10'>" +
+                            "<p class='form-control-static'>" + result.data[i].id + "</p>" +
+                            "</div>"
+                        );
+
+                        var scoreElement = $("<div />").addClass("form-group").html(
+                            "<label class='col-sm-2 control-label'>Score</label>" +
+                            "<div class='col-sm-10'>" +
+                            "<p class='form-control-static'>" + result.data[i].score + "</p>" +
+                            "</div>"
+                        );
+
+
+
+                        var keys = Object.keys(result.data[i].highlight);
+                        var j;
+                        var table = "";
+
+                        for(j=0; j < keys.length; j++)
+                        {
+                            table += "<tr><td>" + keys[j] + "</td><td>" + result.data[i].highlight[keys[j]].toString().replace(/\n/g, "<br />") + "</td></tr>";
+                        }
+
+                        table = "<table class='table form-control-static'><tbody>" + table + "</tbody></table>";
+
+                        var highlightElement = $("<div />").addClass("form-group").html(
+                            "<label class='col-sm-2 control-label'>Highlight</label>" +
+                            "<div class='col-sm-10'>" +
+                            table +
+                            "</div>"
+                        );
+
+                        var buttonContainer = $("<div />").addClass("form-group").html(
+                         "<div class='col-sm-offset-2 col-sm-10'>" +
+                             "<button type='button' class='btn btn-default download-file' data-key='" + result.data[i].id + "'>Download</button> " +
+                             "<button type='button' class='btn btn-info download-file-gurl' data-key='" + result.data[i].id + "'>Download by Generated URL</button>" +
+                         "</div>"
+                        );
+
+                        formElement.append(idElement);
+                        formElement.append(scoreElement);
+                        if (result.data[i].title) {
+                            var titleElement = $("<div />").addClass("form-group").html(
+                                "<label class='col-sm-2 control-label'>Title</label>" +
+                                "<div class='col-sm-10'>" +
+                                "<p class='form-control-static'>" + result.data[i].title + "</p>" +
+                                "</div>"
+                            );
+                            formElement.append(titleElement);
+                        }
+                        formElement.append(highlightElement);
+                        //formElement.append(buttonContainer);
+
+                        $newDiv.append(formElement);
+                        queryResult.append($newDiv);
+                    }
+
+                }
+            });
+
+        });
+
+    });
+
+
+    /*]]>*/
+</script>
+</body>
+</html>
